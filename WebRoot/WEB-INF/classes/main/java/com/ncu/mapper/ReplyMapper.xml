@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ncu.mapper.ReplyMapper">
+    <!--实体类与数据库映射字段部分-->
+    <resultMap id="ResultMapReply" type="com.ncu.po.Reply">
+        <result property="id" column="id" jdbcType="INTEGER"/>
+        <result property="postId" column="post_id" jdbcType="INTEGER"/>
+        <result property="userId" column="user_id" jdbcType="INTEGER"/>
+        <result property="content" column="content" jdbcType="VARCHAR"/>
+        <result property="addTime" column="addTime" jdbcType="TIMESTAMP"/>
+        <result property="isDelete" column="isDelete" jdbcType="INTEGER"/>
+    </resultMap>
+    <!-- 声明数据库字段 -->
+    <sql id="Reply_field">
+        id,post_id,user_id,content,addTime,isDelete
+    </sql>
+    <!-- 实体类属性-->
+    <sql id="Reply_insert">
+        #{id},#{postId},#{userId},#{content},#{addTime},#{isDelete}
+    </sql>
+    <!-- 更新结果  -->
+    <sql id="Reply_update">
+        <if test="userId != null">
+            user_id = #{userId}
+        </if>
+        <if test="postId != null">
+            post_id = #{postId}
+        </if>
+
+        <if test="content != null">
+            content = #{content},
+        </if>
+        <if test="addTime != null">
+            addTime = #{addTime}
+        </if>
+        <if test="isDelete != null">
+            isDelete = #{isDelete}
+        </if>
+
+    </sql>
+    <!-- 查询时条件   -->
+    <sql id="Reply_where">
+        <if test="id != null">
+            and id = #{id}
+        </if>
+        <if test="postId != null">
+            and post_id = #{postId}
+        </if>
+        <if test="userId != null">
+            and user_id = #{userId}
+        </if>
+        <if test="content != null">
+            and content = #{content}
+        </if>
+        <if test="addTime != null">
+            and addTime = #{addTime}
+        </if>
+        <if test="isDelete != null">
+            and isDelete = #{isDelete}
+        </if>
+    </sql>
+
+    <!--    新增        -->
+    <!--    参数：实体类-->
+    <!--    返回：主键 -->
+    <insert id="insert" parameterType="com.ncu.po.Reply" useGeneratedKeys="true" keyProperty="id">
+        insert into reply(
+        <include refid="Reply_field"/>
+        ) values(
+        <include refid="Reply_insert"/>
+        )
+    </insert>
+
+    <!-- 根据实体主键删除一个实体-->
+    <delete id="deleteById" parameterType="java.lang.Integer">
+        delete from reply where id=#{id}
+    </delete>
+
+    <!-- 通过实体删除-->
+    <delete id="deleteByEntity" parameterType="com.ncu.po.Reply">
+        delete from reply where 1=1
+        <include refid="Reply_where"/>
+    </delete>
+
+    <!-- 通过map删除 -->
+    <delete id="deleteByMap" parameterType="java.util.HashMap">
+        delete from reply where 1=1
+        <include refid="Reply_where"/>
+    </delete>
+
+    <!-- 更新一个实体 -->
+    <update id="update" parameterType="com.ncu.po.Reply">
+        update reply
+        <set>
+            <include refid="Reply_update"/>
+        </set>
+        where 1=1
+        <include refid="Reply_where"/>
+    </update>
+
+    <!-- 通过id进行修改-->
+    <update id="updateById" parameterType="com.ncu.po.Reply">
+        update reply
+        <set>
+            <include refid="Reply_update"/>
+        </set>
+        where id=#{id}
+    </update>
+
+    <!-- 根据参数查询-->
+    <select id="listByMap" resultMap="ResultMapReply" parameterType="map">
+        select <include refid="Reply_field"/>
+        from reply where 1=1
+        <include refid="Reply_where"/>
+    </select>
+
+    <!-- 查询整个表 -->
+    <select id="listAll" resultMap="ResultMapReply">
+        select <include refid="Reply_field"/>
+        from reply
+    </select>
+
+    <!-- 查询所有实体,根据实体属性值为判断条件查询所有实体-->
+    <select id="listAllByEntity" resultMap="ResultMapReply" parameterType="com.ncu.po.Reply">
+        select <include refid="Reply_field"/>
+        from reply where 1=1
+        <include refid="Reply_where"/>
+    </select>
+
+    <!-- 根据主键获取一个实体-->
+    <select id="load" resultMap="ResultMapReply" parameterType="java.lang.Integer">
+        select <include refid="Reply_field"/>
+        from reply where id=#{id}
+    </select>
+
+    <!-- 根据主键获取一个实体-->
+    <select id="getById" resultMap="ResultMapReply" parameterType="java.lang.Integer">
+        select <include refid="Reply_field"/>
+        from reply where id=#{id}
+    </select>
+
+    <!-- 通过map查询-->
+    <select id="getByMap" resultMap="ResultMapReply" parameterType="map">
+        select <include refid="Reply_field"/>
+        from reply where 1=1
+        <include refid="Reply_where"/>
+    </select>
+
+    <!--通过对象查询-不分页-->
+    <select id="getByEntity" resultMap="ResultMapReply" parameterType="com.ncu.po.Reply">
+        select <include refid="Reply_field"/>
+        from reply where 1=1
+        <include refid="Reply_where"/>
+    </select>
+
+    <!-- 通过map查询分页-->
+    <select id="findByMap" resultMap="ResultMapReply" parameterType="map">
+        select <include refid="Reply_field"/>
+        from reply where 1=1
+        <include refid="Reply_where"/>
+    </select>
+
+    <!--通过对象查询分页-->
+    <select id="findByEntity" resultMap="ResultMapReply" parameterType="com.ncu.po.Reply">
+        select <include refid="Reply_field"/>
+        from reply where 1=1
+        <include refid="Reply_where"/>
+    </select>
+
+    <!-- 批量新增-->
+    <select id="insertBatch" parameterType="java.util.List">
+        insert into reply(
+        <include refid="Reply_field"/>
+        ) values
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{item.title},#{item.content},#{item.addTime})
+        </foreach>
+    </select>
+
+    <!-- 批量修改-->
+    <update id="updateBatch" parameterType="java.util.List">
+        <foreach collection="list" item="item" index="index" separator=";">
+            update reply
+            <set>
+                <if test="item.title != null">
+                    title = #{item.title},
+                </if>
+                <if test="item.content != null">
+                    content = #{item.content},
+                </if>
+                <if test="item.addTime != null">
+                    addTime = #{item.addTime}
+                </if>
+            </set>
+            where 1=1
+            <if test="item.id != null">
+                and id = #{item.id}
+            </if>
+        </foreach>
+    </update>
+
+    <!-- 封装纯sql语法-->
+    <!-- 查询一个对象返回map-->
+    <select id="getBySqlReturnMap" resultType="map">
+        ${sql}
+    </select>
+
+    <!-- 查询一个对象返回实体类-->
+    <select id="getBySqlReturnEntity" resultMap="ResultMapReply">
+        ${sql}
+    </select>
+
+    <!-- 查询一个对象返回map列表-->
+    <select id="listBySqlReturnMap" resultType="map">
+        ${sql}
+    </select>
+
+    <!-- 查询列表返回实体-->
+    <select id="listBySqlReturnEntity" resultMap="ResultMapReply">
+        ${sql}
+    </select>
+
+    <!-- 查询分页-->
+    <select id="findBySqlRerturnEntity" resultMap="ResultMapReply">
+        ${sql}
+    </select>
+
+    <!-- 通过sql修改-->
+    <update id="updateBysql">
+        ${sql}
+    </update>
+    <!-- 通过sql删除-->
+    <delete id="deleteBySql">
+        ${sql}
+    </delete>
+</mapper>
